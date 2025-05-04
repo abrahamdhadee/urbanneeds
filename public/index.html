@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UE Login</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="image-bg">
+    <div class="overlay"></div>
+    <div class="center-content">
+        <div class="logo-image" id="animated-logo">URBAN EASE</div>
+
+        <form id="loginForm" class="login-form-minimal">
+            <input type="tel" id="mobile" name="mobile" placeholder="Mobile Number" required>
+            <div class="input-group otp-group">
+                <input type="text" id="otp" name="otp" maxlength="6" placeholder="Enter OTP" required>
+                <button type="button" id="sendOtpBtn" class="login-btn-minimal full-width-btn"
+                    style="margin-top:8px;">Send OTP</button>
+            </div>
+            <button type="submit" class="login-btn-minimal">LOGIN</button>
+        </form>
+        <div class="forgot-password-minimal">
+            <a href="create-account.html">Create an Account</a>
+        </div>
+    </div>
+    <footer class="footer-contact">
+        <div>Contact Us: <a href="tel:7006938443">7006938443</a> | <a
+                href="mailto:abdhadee07@gmail.com">abdhadee07@gmail.com</a></div>
+    </footer>
+    <script src="js/script.js"></script>
+    <script>
+        const backendUrl = 'http://localhost:3000';
+        document.getElementById('sendOtpBtn').addEventListener('click', async function () {
+            const mobile = document.getElementById('mobile').value;
+            if (!/^\d{10}$/.test(mobile)) {
+                alert('Please enter a valid 10-digit mobile number');
+                return;
+            }
+            try {
+                console.log('Sending OTP request for mobile:', mobile);
+                const res = await fetch(`${backendUrl}/send-otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mobile })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    console.log('OTP response:', data);
+                    alert('OTP sent! Check your phone or the console for the OTP.');
+                    // For testing, show OTP in console
+                    if (data.otp) {
+                        console.log('Test OTP:', data.otp);
+                    }
+                } else if (res.status === 404) {
+                    window.location.href = 'create-account.html';
+                } else {
+                    console.error('OTP error:', data);
+                    alert(data.message || 'Failed to send OTP');
+                }
+            } catch (err) {
+                console.error('OTP request error:', err);
+                alert('Error sending OTP: ' + err.message);
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const mobile = document.getElementById('mobile').value;
+            const otp = document.getElementById('otp').value;
+
+            if (!/^\d{10}$/.test(mobile)) {
+                alert('Please enter a valid 10-digit mobile number');
+                return;
+            }
+            if (!/^\d{4,6}$/.test(otp)) {
+                alert('Please enter a valid OTP (4-6 digits)');
+                return;
+            }
+            try {
+                // First verify OTP
+                const verifyRes = await fetch(`${backendUrl}/verify-otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mobile, otp })
+                });
+                const verifyData = await verifyRes.json();
+
+                if (verifyRes.ok && verifyData.success) {
+                    // If OTP is valid, fetch user data
+                    const userRes = await fetch(`${backendUrl}/get-user-data`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ mobile })
+                    });
+                    const userData = await userRes.json();
+
+                    if (userRes.ok) {
+                        // Store user data in localStorage
+                        localStorage.setItem('userData', JSON.stringify(userData));
+                        window.location.href = 'main.html';
+                    } else {
+                        alert('Error fetching user data: ' + (userData.message || 'Unknown error'));
+                    }
+                } else {
+                    alert(verifyData.message || 'Invalid OTP');
+                }
+            } catch (err) {
+                console.error('Login error:', err);
+                alert('Error during login process: ' + err.message);
+            }
+        });
+
+        // Enhanced beautiful scramble animation for URBAN EASE
+        const logo = document.getElementById('animated-logo');
+        const original = 'URBAN EASE';
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*';
+        const accentColors = ['#ffd700', '#b0b0b0', '#d1d1d1', '#fffbe6', '#a18cd1'];
+        const finalColor = '#d1d1d1';
+        const scrambleDuration = 2000; // ms
+        const fadeDuration = 500; // ms
+        const delayBetween = 120; // ms between each letter's start
+
+        function createSpans(text) {
+            logo.innerHTML = '';
+            for (let i = 0; i < text.length; i++) {
+                const span = document.createElement('span');
+                span.textContent = text[i] === ' ' ? '\u00A0' : text[i];
+                span.className = 'logo-char';
+                logo.appendChild(span);
+            }
+        }
+
+        function animateScramble() {
+            const spans = logo.querySelectorAll('.logo-char');
+            spans.forEach((span, i) => {
+                if (original[i] === ' ') return;
+                setTimeout(() => {
+                    let scrambleTime = 0;
+                    const scramble = setInterval(() => {
+                        span.textContent = chars[Math.floor(Math.random() * chars.length)];
+                        span.style.color = accentColors[Math.floor(Math.random() * accentColors.length)];
+                        scrambleTime += 50 + Math.random() * 30;
+                        if (scrambleTime > scrambleDuration) {
+                            clearInterval(scramble);
+                            span.textContent = original[i];
+                            span.style.transition = `color ${fadeDuration}ms`;
+                            span.style.color = finalColor;
+                            span.style.opacity = 0.7;
+                            setTimeout(() => {
+                                span.style.opacity = 1;
+                            }, 10);
+                        }
+                    }, 50 + Math.random() * 30);
+                }, i * delayBetween);
+            });
+        }
+
+        function startBeautifulLogoAnimation() {
+            createSpans(original);
+            setTimeout(animateScramble, 200);
+        }
+
+        startBeautifulLogoAnimation();
+        setInterval(startBeautifulLogoAnimation, scrambleDuration + fadeDuration + original.length * delayBetween + 1200);
+    </script>
+</body>
+
+</html>

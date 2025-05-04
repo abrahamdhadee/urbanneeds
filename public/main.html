@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Ease - Services</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body.main-bg {
+            background: url('images/mountain.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            overflow-y: auto;
+        }
+
+        .main-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(40, 40, 40, 0.45);
+            z-index: 0;
+        }
+
+        .services-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px 16px 100px 16px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 32px;
+            margin-top: 90px;
+            min-height: calc(100vh - 90px);
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.13);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            backdrop-filter: blur(10px) saturate(160%);
+            -webkit-backdrop-filter: blur(10px) saturate(160%);
+            border: 1.5px solid rgba(255, 255, 255, 0.22);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 28px 18px 22px 18px;
+            transition: box-shadow 0.3s, transform 0.2s;
+            width: 380px;
+            margin: 0 auto;
+            min-height: 450px;
+        }
+
+        .service-card:hover {
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.28);
+            transform: translateY(-4px) scale(1.03);
+        }
+
+        .service-img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            background: #e0e0e0;
+            box-shadow: 0 2px 8px #0002;
+        }
+
+        .service-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #232526;
+            margin-bottom: 15px;
+            text-align: center;
+            letter-spacing: 0.01em;
+        }
+
+        .service-desc {
+            font-size: 1.1rem;
+            color: #444;
+            text-align: center;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .appointment-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #232526;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .call-btn {
+            background: rgba(147, 112, 219, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            font-size: 1.1rem;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .call-btn:hover {
+            background: rgba(147, 112, 219, 0.7);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(147, 112, 219, 0.3);
+        }
+
+        .appointment-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .dropdown-content {
+            display: none;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 16px;
+            width: 100%;
+            margin-top: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dropdown-content.show {
+            display: block;
+        }
+
+        .rate-info {
+            font-size: 1.1rem;
+            color: #232526;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .main-header-animated {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            z-index: 10;
+            background: rgba(40, 40, 40, 0.32);
+            box-shadow: 0 2px 12px #0003;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Arial', sans-serif;
+            font-weight: 900;
+            font-size: 1.6rem;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5),
+                0 0 20px rgba(255, 255, 255, 0.3),
+                0 0 30px rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            padding: 10px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .main-header-animated h1 {
+            margin: 0;
+            padding: 22px 0 16px 0;
+            text-align: center;
+            color: #fff;
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-shadow: 0 4px 24px #0008, 0 1px 2px #fff8;
+            background: none;
+        }
+
+        .main-header-char {
+            display: inline-block;
+            transition: color 0.35s, opacity 0.35s;
+            will-change: color, opacity;
+            white-space: nowrap;
+        }
+
+        .services-container {
+            margin-top: 90px !important;
+        }
+
+        @media (max-width: 600px) {
+            .main-header-animated {
+                gap: 10px;
+            }
+
+            .main-header-animated h1 {
+                font-size: 1.3rem;
+                padding: 14px 0 10px 0;
+            }
+
+            .logo {
+                font-size: 1.3rem;
+                width: 40px;
+                height: 40px;
+                padding: 8px;
+                left: 15px;
+            }
+        }
+
+        .contact-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            background: rgba(40, 40, 40, 0.45);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            text-align: center;
+            z-index: 2;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .contact-title {
+            font-size: 1rem;
+            color: #fff;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+            text-decoration: none;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .contact-item:hover {
+            transform: translateY(-2px);
+            transition: transform 0.3s;
+        }
+
+        .contact-item i {
+            font-size: 1rem;
+        }
+
+        .services-container {
+            margin-bottom: 40px;
+        }
+
+        /* Custom Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Firefox Scrollbar */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
+        }
+
+        .header-buttons {
+            position: absolute;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .logout-btn,
+        .profile-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .logout-btn:hover,
+        .profile-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 15px;
+            min-width: 200px;
+            margin-top: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-dropdown.show {
+            display: block;
+        }
+
+        .profile-info {
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .profile-info p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .profile-info strong {
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 5px;
+        }
+
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            .service-card {
+                margin: 1rem 0;
+            }
+
+            .header {
+                padding: 1rem 0;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .nav {
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                width: 100%;
+                margin: 0.5rem 0;
+            }
+        }
+
+        /* Tablet-specific styles */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .services {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .service-card {
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="main-bg">
+    <div class="main-overlay"></div>
+    <header class="main-header-animated">
+        <div class="logo">UB</div>
+        <h1 id="main-animated-header">OUR SERVICES</h1>
+        <div class="header-buttons">
+            <button class="profile-btn" onclick="toggleProfile()">Profile</button>
+            <button class="logout-btn" onclick="window.location.href='index.html'">Logout</button>
+            <div class="profile-dropdown">
+                <div class="profile-info">
+                    <strong>User Information</strong>
+                    <p id="user-name">Name: </p>
+                    <p id="user-address">Address: </p>
+                    <p id="user-phone">Phone: </p>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="services-container">
+        <div class="service-card">
+            <img src="images/Pumbling.jpg" class="service-img" alt="Plumbing">
+            <div class="service-title">Plumbing</div>
+            <div class="service-desc">Expert plumbing repairs, installations, and maintenance for your home. Our
+                certified plumbers ensure quality service and lasting solutions for all your plumbing needs.</div>
+            <a href="tel:7006938443" class="call-btn">Call for Appointment</a>
+        </div>
+        <div class="service-card">
+            <img src="images/electrical.jpg" class="service-img" alt="Electrical Repairs & Installations">
+            <div class="service-title">Electrical Repairs & Installations</div>
+            <div class="service-desc">Safe and reliable electrical work by certified professionals. We handle all types
+                of electrical installations, repairs, and maintenance with utmost safety and precision.</div>
+            <a href="tel:7006938443" class="call-btn">Call for Appointment</a>
+        </div>
+        <div class="service-card">
+            <img src="images/masonary.jpg" class="service-img" alt="Masonry">
+            <div class="service-title">Masonry</div>
+            <div class="service-desc">Quality masonry work for walls, floors, and more. Our skilled masons provide
+                durable and aesthetically pleasing solutions for all your construction needs.</div>
+            <a href="tel:7006938443" class="call-btn">Call for Appointment</a>
+        </div>
+        <div class="service-card">
+            <img src="images/garden.jpg" class="service-img" alt="Gardening & Landscaping">
+            <div class="service-title">Gardening & Landscaping</div>
+            <div class="service-desc">Beautiful gardens and landscapes designed and maintained. Transform your outdoor
+                space with our expert gardening and landscaping services.</div>
+            <a href="tel:7006938443" class="call-btn">Call for Appointment</a>
+        </div>
+        <div class="service-card">
+            <img src="images/carpentry.jpg" class="service-img" alt="Carpentry">
+            <div class="service-title">Carpentry</div>
+            <div class="service-desc">Custom woodwork, repairs, and installations for your home. Our skilled carpenters
+                deliver precision and quality in every project.</div>
+            <a href="tel:7006938443" class="call-btn">Call for Appointment</a>
+        </div>
+        <div class="service-card">
+            <img src="images/homecleaning.jpg" class="service-img" alt="Laundry Services">
+            <div class="service-title">Laundry Services</div>
+            <div class="service-desc">Convenient and professional laundry and dry cleaning. We handle your clothes with
+                care and ensure they come back fresh and clean.</div>
+            <a href="tel:7006938443" class="call-btn">Call for Appointment</a>
+        </div>
+        <div class="service-card">
+            <img src="images/homecleaning.jpg" class="service-img" alt="Home Cleaning">
+            <div class="service-title">Home Cleaning</div>
+            <div class="service-desc">Thorough cleaning for every room in your home. Our professional cleaners ensure a
+                spotless and hygienic living environment.</div>
+            <a href="tel:7006938443" class="call-btn">Call for Appointment</a>
+        </div>
+        <div class="service-card">
+            <img src="images/bathroom.jpg" class="service-img" alt="Bathroom Deep Cleaning">
+            <div class="service-title">Bathroom Deep Cleaning</div>
+            <div class="service-desc">Intensive cleaning and sanitization for your bathrooms. We ensure a germ-free and
+                sparkling clean bathroom environment.</div>
+            <a href="tel:7006938443" class="call-btn">Call for Appointment</a>
+        </div>
+        <div class="service-card">
+            <img src="images/kitch.jpg" class="service-img" alt="Kitchen Deep Cleaning">
+            <div class="service-title">Kitchen Deep Cleaning</div>
+            <div class="service-desc">Deep cleaning for a sparkling, hygienic kitchen. We clean every nook and corner to
+                ensure a safe cooking environment.</div>
+            <a href="tel:7006938443" class="call-btn">Call for Appointment</a>
+        </div>
+        <div class="service-card">
+            <img src="images/packing.jpg" class="service-img" alt="Packing & Moving">
+            <div class="service-title">Packing & Moving</div>
+            <div class="service-desc">Safe and efficient packing and moving services. We handle your belongings with
+                care and ensure a smooth relocation process.</div>
+            <a href="tel:7006938443" class="call-btn">Call for Appointment</a>
+        </div>
+        <div class="service-card">
+            <img src="images/carwash.jpg" class="service-img" alt="Weekly Car Washing (on-site)">
+            <div class="service-title">Weekly Car Washing (on-site)</div>
+            <div class="service-desc">Regular, on-site car washing for a spotless vehicle. We provide convenient and
+                thorough car cleaning services at your location.</div>
+            <a href="tel:7006938443" class="call-btn">Call for Appointment</a>
+        </div>
+        <div class="service-card">
+            <img src="images/homecleaning.jpg" class="service-img" alt="House Painting">
+            <div class="service-title">House Painting</div>
+            <div class="service-desc">Professional painting for interiors and exteriors. Transform your space with our
+                high-quality painting services and color expertise.</div>
+            <a href="tel:7006938443" class="call-btn">Call for Appointment</a>
+        </div>
+        <div class="service-card">
+            <img src="images/ac.jpg" class="service-img" alt="AC and Home Appliance Servicing">
+            <div class="service-title">AC and Home Appliance Servicing</div>
+            <div class="service-desc">Servicing and repairs for all major appliances. Our technicians ensure your
+                appliances run efficiently and last longer.</div>
+            <a href="tel:7006938443" class="call-btn">Call for Appointment</a>
+        </div>
+        <div class="service-card">
+            <img src="images/pestcontrol.jpg" class="service-img" alt="Pest Control">
+            <div class="service-title">Pest Control</div>
+            <div class="service-desc">Effective pest control for a safe, healthy home. We use safe and effective methods
+                to eliminate pests and prevent future infestations.</div>
+            <a href="tel:7006938443" class="call-btn">Call for Appointment</a>
+        </div>
+        <div class="service-card">
+            <img src="images/rat.jpg" class="service-img" alt="Rat Catching & Rodent Control">
+            <div class="service-title">Rat Catching & Rodent Control</div>
+            <div class="service-desc">Expert solutions for rodent and pest problems. We provide effective and humane
+                methods to control and eliminate rodent infestations.</div>
+            <a href="tel:7006938443" class="call-btn">Call for Appointment</a>
+        </div>
+    </div>
+    <div class="contact-section">
+        <h2 class="contact-title">Contact Us</h2>
+        <div class="contact-info">
+            <a href="mailto:abrahamdhadee@gmail.com" class="contact-item">
+                <i>📧</i>
+                <span>abrahamdhadee@gmail.com</span>
+            </a>
+            <a href="tel:7006938443" class="contact-item">
+                <i>📱</i>
+                <span>7006938443</span>
+            </a>
+        </div>
+    </div>
+    <script>
+        // Scramble animation for the main header
+        const mainHeader = document.getElementById('main-animated-header');
+        const mainText = 'OUR SERVICES';
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*';
+        const accentColors = ['#ffd700', '#b0b0b0', '#d1d1d1', '#fffbe6', '#a18cd1'];
+        const finalColor = '#fff';
+        const scrambleDuration = 1800;
+        const fadeDuration = 500;
+        const delayBetween = 80;
+        function createSpans(text) {
+            mainHeader.innerHTML = '';
+            for (let i = 0; i < text.length; i++) {
+                const span = document.createElement('span');
+                span.textContent = text[i] === ' ' ? '\u00A0' : text[i];
+                span.className = 'main-header-char';
+                mainHeader.appendChild(span);
+            }
+        }
+        function animateScramble() {
+            const spans = mainHeader.querySelectorAll('.main-header-char');
+            spans.forEach((span, i) => {
+                if (mainText[i] === ' ') return;
+                setTimeout(() => {
+                    let scrambleTime = 0;
+                    const scramble = setInterval(() => {
+                        span.textContent = chars[Math.floor(Math.random() * chars.length)];
+                        span.style.color = accentColors[Math.floor(Math.random() * accentColors.length)];
+                        scrambleTime += 50 + Math.random() * 30;
+                        if (scrambleTime > scrambleDuration) {
+                            clearInterval(scramble);
+                            span.textContent = mainText[i];
+                            span.style.transition = `color ${fadeDuration}ms`;
+                            span.style.color = finalColor;
+                            span.style.opacity = 0.7;
+                            setTimeout(() => {
+                                span.style.opacity = 1;
+                            }, 10);
+                        }
+                    }, 50 + Math.random() * 30);
+                }, i * delayBetween);
+            });
+        }
+        function startBeautifulHeaderAnimation() {
+            createSpans(mainText);
+            setTimeout(animateScramble, 200);
+        }
+        startBeautifulHeaderAnimation();
+        setInterval(startBeautifulHeaderAnimation, scrambleDuration + fadeDuration + mainText.length * delayBetween + 1200);
+
+        function toggleDropdown(button) {
+            const dropdown = button.nextElementSibling;
+            dropdown.classList.toggle('show');
+        }
+
+        // Function to get user data from localStorage
+        function populateUserData() {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            console.log('Retrieved user data:', userData); // Debug log
+
+            if (userData) {
+                document.getElementById('user-name').textContent = `Name: ${userData.name || 'Not provided'}`;
+                document.getElementById('user-address').textContent = `Address: ${userData.address || 'Not provided'}`;
+                document.getElementById('user-phone').textContent = `Phone: ${userData.phone || 'Not provided'}`;
+            } else {
+                // If no data found, try to get it from URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                const name = urlParams.get('name');
+                const address = urlParams.get('address');
+                const phone = urlParams.get('phone');
+
+                if (name || address || phone) {
+                    const newUserData = {
+                        name: name || 'Not provided',
+                        address: address || 'Not provided',
+                        phone: phone || 'Not provided'
+                    };
+                    localStorage.setItem('userData', JSON.stringify(newUserData));
+                    populateUserData(); // Recursively call to update display
+                } else {
+                    // If no data anywhere, show default message
+                    document.getElementById('user-name').textContent = 'Name: Not provided';
+                    document.getElementById('user-address').textContent = 'Address: Not provided';
+                    document.getElementById('user-phone').textContent = 'Phone: Not provided';
+                }
+            }
+        }
+
+        // Call the function when the page loads
+        window.onload = function () {
+            console.log('Page loaded, checking for user data...'); // Debug log
+            populateUserData();
+        };
+
+        // Add event listener for storage changes
+        window.addEventListener('storage', function (e) {
+            if (e.key === 'userData') {
+                console.log('Storage changed, updating user data...'); // Debug log
+                populateUserData();
+            }
+        });
+
+        function toggleProfile() {
+            const dropdown = document.querySelector('.profile-dropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+            const dropdown = document.querySelector('.profile-dropdown');
+            const profileBtn = document.querySelector('.profile-btn');
+            if (!profileBtn.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+
+</html>
