@@ -10,9 +10,10 @@ const PORT = process.env.PORT || 3000;
 
 // CORS configuration for production
 app.use(cors({
-    origin: '*', // In production, replace with your frontend domain
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type']
+    origin: '*',
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 }));
 
 app.use(bodyParser.json());
