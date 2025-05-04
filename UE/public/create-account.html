@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - Urban Ease</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body.create-bg {
+            background: url('1.jpg') no-repeat center center fixed !important;
+            background-size: cover !important;
+        }
+
+        body.create-bg .overlay {
+            background: rgba(60, 60, 60, 0.55);
+            /* neutral gray overlay */
+        }
+
+        .logo-image.create {
+            color: #b0b0b0;
+            text-shadow: 0 4px 24px #b0b0b088, 0 1px 2px #fff8;
+        }
+
+        .welcome.create {
+            color: #b0b0b0;
+            text-shadow: 0 2px 12px #000a;
+        }
+
+        .login-form-create input,
+        .login-form-create textarea {
+            background: rgba(255, 255, 255, 0.32) !important;
+            border-bottom: 2px solid #b0b0b0 !important;
+            color: #232526 !important;
+        }
+
+        .login-form-create input:focus,
+        .login-form-create textarea:focus {
+            border-bottom: 2.5px solid #232526 !important;
+            background: #f2f2f2 !important;
+        }
+
+        .login-btn-create {
+            background: linear-gradient(90deg, #b0b0b0 0%, #232526 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 24px;
+            padding: 12px 0;
+            margin-top: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 12px #0002;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+
+        .login-btn-create:hover {
+            background: linear-gradient(90deg, #232526 0%, #b0b0b0 100%);
+            color: #fff;
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        .forgot-password-minimal a {
+            color: #b0b0b0;
+        }
+
+        .forgot-password-minimal a:hover {
+            color: #232526;
+        }
+    </style>
+</head>
+
+<body class="image-bg create-bg">
+    <div class="overlay"></div>
+    <div class="center-content">
+        <div class="logo-image create">URBAN EASE</div>
+        <h1 class="welcome create">Create Your Account</h1>
+        <form id="createAccountForm" class="login-form-minimal login-form-create">
+            <input type="text" id="name" name="name" placeholder="Full Name" required>
+            <input type="tel" id="phone" name="phone" placeholder="Mobile Number" required>
+            <textarea id="address" name="address" placeholder="Address" rows="3" required
+                style="font-size:1.08rem;font-family:'Segoe UI',Arial,sans-serif;line-height:1.5;letter-spacing:0.01em;padding:12px 8px 10px 8px;background:rgba(255,255,255,0.32);color:#232526;border:none;border-bottom:2px solid #b0b0b0;outline:none;transition:border-color 0.2s,background 0.2s;box-shadow:none;resize:vertical;"></textarea>
+            <button type="submit" class="login-btn-minimal login-btn-create">Create Account</button>
+        </form>
+        <div class="forgot-password-minimal">
+            <a href="index.html">Back to Login</a>
+        </div>
+    </div>
+    <script>
+        document.getElementById('createAccountForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+
+            // Validate phone number
+            if (!/^\d{10}$/.test(phone)) {
+                alert('Please enter a valid 10-digit mobile number');
+                return;
+            }
+
+            // Validate name
+            if (name.trim().length < 3) {
+                alert('Please enter a valid name (at least 3 characters)');
+                return;
+            }
+
+            // Validate address
+            if (address.trim().length < 5) {
+                alert('Please enter a valid address');
+                return;
+            }
+
+            try {
+                const res = await fetch('http://localhost:3000/create-account', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, phone, address })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    alert('Account created successfully! You can now login.');
+                    window.location.href = 'index.html';
+                } else {
+                    alert(data.message || 'Error creating account');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error creating account. Please try again.');
+            }
+        });
+    </script>
+</body>
+
+</html>
